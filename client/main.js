@@ -20,5 +20,3 @@ console.log(navigator.language);
 // eslint disable  - 검색 중지
 
 const a = 'hello';
-
-sayHi();
