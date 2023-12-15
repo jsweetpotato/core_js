@@ -6,6 +6,126 @@
 // - JavaScript의 매우 강력한 특성으로 독립적인 변수를 참조하는 함수를 말합니다.
 //   즉, 클로저에 정의된 함수는 그것이 작성된 환경을 '기억'합니다.
 
+function first() {
+  let x = 10;
+  function second() {
+    let y = 20;
+    return x + y;
+  }
+
+  return second;
+}
+
+const value = first();
+
+function counter() {
+  let count = 0;
+  function inner() {
+    console.log(++count);
+
+    return inner;
+  }
+}
+
+const c1 = counter();
+const c2 = counter();
+const c3 = counter();
+
+function earth() {
+  let water = true;
+
+  let apple = {
+    founder: 'Steve Jobs',
+    ceo: 'Tim Cook',
+    product: ['iphone', 'macbook', 'macStudio', 'appleWatch'],
+  };
+
+  let gravity = 10;
+
+  return function (value) {
+    gravity = value;
+  };
+}
+
+const ufo = earth();
+
+ufo(1);
+
+function generateRandomClr() {
+  const r = Math.floor(Math.random() * 256);
+  const g = Math.floor(Math.random() * 256);
+  const b = Math.floor(Math.random() * 256);
+
+  return [r, g, b];
+}
+
+const button = document.querySelector('.button');
+
+// const handleClick = (() => {
+//   let isClicked = false;
+
+//   return function () {
+//     if (!isClicked) {
+//       const newClr = generateRandomClr();
+//       document.body.style.background = `rgb(${newClr[0]},${newClr[1]},${newClr[2]} )`;
+//     } else {
+//       document.body.style.background = 'white';
+//     }
+
+//     isClicked = !isClicked;
+//   };
+// })();
+
+const handleClick = (() => {
+  let isClicked = false;
+
+  return () => {
+    if (!isClicked) {
+      document.body.style.background = 'orange';
+    } else {
+      document.body.style.background = 'white';
+    }
+    isClicked = !isClicked;
+  };
+})();
+
+// button.addEventListener('click', handleClick);
+
+// const a = (b)=>(d)=>(c)=> b+d+c
+// function a(){
+//   return function(){
+
+//     return function(){
+//       b+d+c
+//     }
+//   }
+// }
+
+function bindEvent(node, type, handler) {
+  node.addEventListener(type, handler);
+  return () => node.removeEventListener(type, handler);
+}
+
+const remove = bindEvent(button, 'click', handleClick);
+// remove();
+
+// useState 기본틀
+function useState(initValue) {
+  let value = initValue;
+
+  function read() {
+    return value;
+  }
+
+  function write(newValue) {
+    value = newValue;
+  }
+
+  return [read, write];
+}
+
+const [state, setState] = useState(true);
+
 // 모든 함수에는 실행 컨텍스트가 있습니다. 실행 컨텍스트는 해당 함수 내의 변수와
 // 해당 부모 환경에 대한 참조를 의미하는 환경으로 구성됩니다. 상위 환경에 대한 참조는
 // 내부 함수가 작성된 범위 외부 또는 내부에서 호출되는지 여부에 관계없이 상위 범위의
