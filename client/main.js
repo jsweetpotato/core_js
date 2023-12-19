@@ -1,10 +1,18 @@
-import { diceAnimation, getNode, getNodes, insertLast } from './lib/index.js';
+import {
+  memo,
+  getNode,
+  getNodes,
+  endScroll,
+  insertLast,
+  diceAnimation,
+  clearContents,
+} from "./lib/index.js";
 
 const [rollingButton, recordButton, resetButton] = getNodes(
-  '.buttonGroup > button'
+  ".buttonGroup > button"
 );
 
-const recordListWrapper = getNode('.recordListWrapper');
+const recordListWrapper = getNode(".recordListWrapper");
 
 // [phase-1]
 // 1. 주사위 굴리기
@@ -14,23 +22,26 @@ const recordListWrapper = getNode('.recordListWrapper');
 // 1. 주사위 눈 값 가져오기
 // 2. 태그 만들기
 // 3. 뿌려주기
+
 let count = 0;
 let total = 0;
 
-function creatItem(value) {
+function createItem(value) {
   const template = `
-  <tr>
-    <td>${++count}</td>
-    <td>${value}</td>
-    <td>${(total += value * 1)}</td>
-  </tr>
-`;
+    <tr>
+      <td>${++count}</td>
+      <td>${value}</td>
+      <td>${(total += value)}</td>
+    </tr>
+  `;
   return template;
 }
 
 function renderRecordItem() {
-  const diceValue = getNode('#cube').dataset.dice * 1;
-  insertLast('.recordList tbody', creatItem(diceValue));
+  const diceValue = memo("cube").dataset.dice / 1;
+
+  insertLast(".recordList tbody", createItem(diceValue));
+  endScroll(recordListWrapper);
 }
 
 const handleRollingDice = (() => {
@@ -62,10 +73,13 @@ function handleRecord() {
 
 function handleReset() {
   recordListWrapper.hidden = true;
-  total = 0;
+
+  clearContents(getNode("tbody"));
+
   count = 0;
+  total = 0;
 }
 
-rollingButton.addEventListener('click', handleRollingDice);
-recordButton.addEventListener('click', handleRecord);
-resetButton.addEventListener('click', handleReset);
+rollingButton.addEventListener("click", handleRollingDice);
+recordButton.addEventListener("click", handleRecord);
+resetButton.addEventListener("click", handleReset);
