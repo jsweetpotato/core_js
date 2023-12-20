@@ -8,6 +8,8 @@ import {
   clearContents,
 } from "./lib/index.js";
 
+import * as Check from "./utils/index.js";
+
 const [rollingButton, recordButton, resetButton] = getNodes(
   ".buttonGroup > button"
 );
@@ -64,6 +66,27 @@ const handleRollingDice = (() => {
     isClicked = !isClicked;
   };
 })();
+
+const handleRollingDice2 = () => {
+  let isClicked = false;
+  let stopAnimation;
+
+  return () => {
+    if (!isClicked) {
+      // 실행
+      stopAnimation = setInterval(diceAnimation, 100);
+      recordButton.disabled = true;
+      resetButton.disabled = true;
+    } else {
+      // 정지
+      clearInterval(stopAnimation);
+      recordButton.disabled = false;
+      resetButton.disabled = false;
+    }
+
+    isClicked = !isClicked;
+  };
+};
 
 function handleRecord() {
   recordListWrapper.hidden = false;
